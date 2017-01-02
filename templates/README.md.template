@@ -1,0 +1,12 @@
+# docker-dotnet-dev
+
+* .Net Core development image ${VERSION}
+
+## Versions
+- .Net Core ${VERSION}
+
+## Usage
+
+```docker run --rm -v `pwd`/src:/app/src chrisgarrett/dotnet-dev npm run start```
+
+## Credits
