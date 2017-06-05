@@ -1,9 +1,9 @@
 # docker-dotnet-dev
 
-* .Net Core development image 1.0.3
+* .Net Core development image 1.1.2
 
 ## Versions
-- .Net Core 1.0.3
+- .Net Core 1.1.2
 
 ## Usage
 

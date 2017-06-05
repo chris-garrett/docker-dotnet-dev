@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:${VERSION}-sdk-msbuild
+FROM microsoft/dotnet:${VERSION}-sdk
 MAINTAINER Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)
 LABEL description=".Net Core development image ${VERSION}"
 RUN apt-get update && apt-get install -y \

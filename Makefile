@@ -1,5 +1,5 @@
 
-IMAGE_VERSION=1.0.3
+IMAGE_VERSION=1.1.2
 IMAGE_NAME=chrisgarrett/dotnet-dev
 
 all: build

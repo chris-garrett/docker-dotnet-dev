@@ -1,6 +1,6 @@
-FROM microsoft/dotnet:1.0.3-sdk-msbuild
+FROM microsoft/dotnet:1.1.2-sdk
 MAINTAINER Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)
-LABEL description=".Net Core development image 1.0.3"
+LABEL description=".Net Core development image 1.1.2"
 RUN apt-get update && apt-get install -y \
   git \
   make \
