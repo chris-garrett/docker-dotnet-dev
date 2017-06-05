@@ -10,5 +10,5 @@ build:
 
 	docker build --rm=true -t ${IMAGE_NAME}:${IMAGE_VERSION} .
 
-run:
+bash:
 	docker run --rm -it ${IMAGE_NAME}:${IMAGE_VERSION} bash
