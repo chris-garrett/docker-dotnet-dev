@@ -3,10 +3,30 @@
 * .Net Core development image ${VERSION}
 
 ## Versions
-- .Net Core ${VERSION}
+- .Net Core SDK ${DOTNET_VERSION}: https://hub.docker.com/r/microsoft/dotnet/
+- Dockerize ${DOCKERIZE_VERSION}: https://github.com/jwilder/dockerize
+- Node.js ${NODE_VERSION}: https://nodejs.org/en/
 
 ## Usage
 
-```docker run --rm -v `pwd`/src:/app/src chrisgarrett/dotnet-dev npm run start```
+Basic usage:
+```
+docker run --rm \
+  -v `pwd`/src:/work/app/src \
+  ${IMAGE_NAME}:${IMAGE_VERSION} \
+  dotnet create reactredux
+```
+
+If you want fast start up times you will want to mount cache directores as well:
+```
+docker run --rm \
+  -v `pwd`/src:/work/app/src \
+  -v `pwd`/../cache/dotnet:/home/sprout/.dotnet \
+  -v `pwd`/../cache/dotnet:/home/sprout/.nuget \
+  -v `pwd`/../cache/dotnet:/home/sprout/.config \
+  -v `pwd`/../cache/dotnet:/home/sprout/.npm \
+  ${IMAGE_NAME}:${IMAGE_VERSION} \
+  dotnet create reactredux
+```
 
 ## Credits

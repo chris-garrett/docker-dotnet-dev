@@ -1,10 +1,12 @@
-FROM microsoft/dotnet:${VERSION}-sdk
+FROM microsoft/dotnet:${DOTNET_VERSION}
 MAINTAINER Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)
-LABEL description=".Net Core development image ${VERSION}"
+LABEL description=".Net Core development image ${IMAGE_VERSION}"
 
-ARG DOCKERIZE_VERSION=v0.3.0
+ARG DOCKERIZE_VERSION=${DOCKERIZE_VERSION}
 
-RUN useradd -ms /bin/bash sprout
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+ENV NODE_HOME="/opt/node-${NODE_VERSION}"
+ENV PATH="/opt/node-${NODE_VERSION}/bin:${PATH}"
 
 COPY ./bash_aliases /home/sprout/.bashrc
 COPY ./vimrc /home/sprout/.vimrc
@@ -16,17 +18,37 @@ RUN set -x \
     vim \
     wget \
     curl \
+    xz-utils \
   && rm -rf /var/lib/apt/lists/* \
-
+  && useradd -ms /bin/bash sprout \
   && echo "export DOTNET_CLI_TELEMETRY_OPTOUT=1" >> /home/sprout/.bashrc \
-  && mkdir app \
-  && chown sprout:sprout /home/sprout/.bashrc /home/sprout/.vimrc /app \
+  && mkdir -p \
+    /work/app/src \
+    /work/data \
+    /home/sprout/.dotnet \
+    /home/sprout/.nuget \
+    /home/sprout/.config \
+    /home/sprout/.npm \
+  && chown -R sprout:sprout \
+    /home/sprout \
+    /home/sprout/.bashrc \
+    /home/sprout/.vimrc \
+    /home/sprout/.dotnet \
+    /home/sprout/.nuget \
+    /home/sprout/.config \
+    /home/sprout/.npm \
+    /work \
   && ln -sf /usr/bin/vim /usr/bin/vi \
-
   && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+  && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+  && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+  && wget https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz \
+  && pwd \
+  && ls -la \
+  && tar -vxf node-${NODE_VERSION}-linux-x64.tar.xz \
+  && mv node-${NODE_VERSION}-linux-x64 /opt/node-${NODE_VERSION} \
+  && rm node-${NODE_VERSION}-linux-x64.tar.xz
 
-WORKDIR /app/src
+WORKDIR /work/app/src
 EXPOSE 3000
 USER sprout
