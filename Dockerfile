@@ -1,6 +1,6 @@
 FROM microsoft/dotnet:2.1-sdk
 MAINTAINER Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)
-LABEL description=".Net Core development image 2-18.05.18"
+LABEL description=".Net Core development image 2-2018.05.18"
 
 ARG DOCKERIZE_VERSION=v0.6.0
 
@@ -50,5 +50,5 @@ RUN set -x \
   && rm node-v8.11.2-linux-x64.tar.xz
 
 WORKDIR /work/app/src
-EXPOSE 3000
+EXPOSE 5000
 USER sprout

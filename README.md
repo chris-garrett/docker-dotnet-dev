@@ -13,7 +13,7 @@ Basic usage:
 ```
 docker run --rm \
   -v `pwd`/src:/work/app/src \
-  chrisgarrett/dotnet-dev:2-18.05.18 \
+  chrisgarrett/dotnet-dev:2-2018.05.18 \
   dotnet create reactredux
 ```
 
@@ -25,7 +25,7 @@ docker run --rm \
   -v `pwd`/../cache/dotnet:/home/sprout/.nuget \
   -v `pwd`/../cache/dotnet:/home/sprout/.config \
   -v `pwd`/../cache/dotnet:/home/sprout/.npm \
-  chrisgarrett/dotnet-dev:2-18.05.18 \
+  chrisgarrett/dotnet-dev:2-2018.05.18 \
   dotnet create reactredux
 ```
 
