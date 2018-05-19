@@ -1,12 +1,12 @@
 FROM microsoft/dotnet:2.1-sdk
 MAINTAINER Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)
-LABEL description=".Net Core development image 2-18.05.16"
+LABEL description=".Net Core development image 2-18.05.18"
 
 ARG DOCKERIZE_VERSION=v0.6.0
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 ENV NODE_HOME="/opt/node-v8.11.2"
-ENV PATH="/opt/node-v8.11.2/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/Users/chris/opt/rancher-v0.6.4:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet"
+ENV PATH="/opt/node-v8.11.2/bin:/opt/go-1.8/bin:/opt/node-v6.10.0-linux-x64/bin:/home/chris/projects/mackware/go/bin:/opt/go-1.8/bin:/home/chris/bin:/home/chris/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
 
 COPY ./bash_aliases /home/sprout/.bashrc
 COPY ./vimrc /home/sprout/.vimrc

@@ -1,4 +1,3 @@
-.PHONEY: all create build run
 
 all:
 
