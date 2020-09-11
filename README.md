@@ -3,9 +3,9 @@
 * .Net Core development image 
 
 ## Versions
-- .Net Core SDK 2.2-sdk: https://hub.docker.com/r/microsoft/dotnet/
-- Dockerize v0.6.0: https://github.com/jwilder/dockerize
-- Node.js v10.15.0: https://nodejs.org/en/
+- .Net Core SDK 3.1-focal: https://hub.docker.com/r/microsoft/dotnet/
+- Dockerize v0.6.1: https://github.com/jwilder/dockerize
+- Node.js v12.18.3: https://nodejs.org/en/
 
 ## Usage
 
@@ -13,7 +13,7 @@ Basic usage:
 ```
 docker run --rm \
   -v `pwd`/src:/work/app/src \
-  chrisgarrett/dotnet-dev:2.2-2019.01.07 \
+  chrisgarrett/dotnet-dev:3.1.402 \
   dotnet create reactredux
 ```
 
@@ -25,7 +25,7 @@ docker run --rm \
   -v `pwd`/../cache/dotnet:/home/sprout/.nuget \
   -v `pwd`/../cache/dotnet:/home/sprout/.config \
   -v `pwd`/../cache/dotnet:/home/sprout/.npm \
-  chrisgarrett/dotnet-dev:2.2-2019.01.07 \
+  chrisgarrett/dotnet-dev:3.1.402 \
   dotnet create reactredux
 ```
 
