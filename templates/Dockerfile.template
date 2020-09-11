@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:${DOTNET_VERSION}
+FROM mcr.microsoft.com/dotnet/core/sdk:${DOTNET_VERSION}
 MAINTAINER Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)
 LABEL description=".Net Core development image ${IMAGE_VERSION}"
 

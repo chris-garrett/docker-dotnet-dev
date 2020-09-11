@@ -1,9 +1,9 @@
 
-export IMAGE_VERSION=2.2-2019.01.07
+export IMAGE_VERSION=3.1.402
 export IMAGE_NAME=chrisgarrett/dotnet-dev
-export DOTNET_VERSION=2.2-sdk
-export DOCKERIZE_VERSION=v0.6.0
-export NODE_VERSION=v10.15.0
+export DOTNET_VERSION=3.1-focal
+export DOCKERIZE_VERSION=v0.6.1
+export NODE_VERSION=v12.18.3
 
 all: build
 
