@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:${DOTNET_VERSION}
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}
 MAINTAINER Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)
-LABEL description=".Net Core development image ${IMAGE_VERSION}"
+LABEL description=".Net ${DOTNET_VERSION} Core development image ${IMAGE_VERSION}"
 
 ARG DOCKERIZE_VERSION=${DOCKERIZE_VERSION}
 
@@ -43,8 +43,6 @@ RUN set -x \
   && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
   && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
   && wget https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz \
-  && pwd \
-  && ls -la \
   && tar -vxf node-${NODE_VERSION}-linux-x64.tar.xz \
   && mv node-${NODE_VERSION}-linux-x64 /opt/node-${NODE_VERSION} \
   && rm node-${NODE_VERSION}-linux-x64.tar.xz
