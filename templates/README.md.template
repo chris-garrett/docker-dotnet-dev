@@ -1,11 +1,14 @@
 # docker-dotnet-dev
 
-* .Net Core development image ${VERSION}
+.Net development image ${IMAGE_VERSION}
 
 ## Versions
-- .Net Core SDK ${DOTNET_VERSION}: https://hub.docker.com/r/microsoft/dotnet/
+- .Net SDK ${DOTNET_VERSION}: https://hub.docker.com/_/microsoft-dotnet-sdk//
 - Dockerize ${DOCKERIZE_VERSION}: https://github.com/jwilder/dockerize
 - Node.js ${NODE_VERSION}: https://nodejs.org/en/
+- Task ${TASK_VERSION}: https://github.com/go-task
+- Entity Framework Cli (dotnet-ef): https://docs.microsoft.com/en-us/ef/core/cli/dotnet
+- Serverless: https://www.serverless.com 
 
 ## Usage
 
@@ -22,9 +25,9 @@ If you want fast start up times you will want to mount cache directores as well:
 docker run --rm \
   -v `pwd`/src:/work/app/src \
   -v `pwd`/../cache/dotnet:/home/sprout/.dotnet \
-  -v `pwd`/../cache/dotnet:/home/sprout/.nuget \
-  -v `pwd`/../cache/dotnet:/home/sprout/.config \
-  -v `pwd`/../cache/dotnet:/home/sprout/.npm \
+  -v `pwd`/../cache/nuget:/home/sprout/.nuget \
+  -v `pwd`/../cache/configdotnet:/home/sprout/.config \
+  -v `pwd`/../cache/npm:/home/sprout/.npm \
   ${IMAGE_NAME}:${IMAGE_VERSION} \
   dotnet create reactredux
 ```
