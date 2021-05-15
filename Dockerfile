@@ -17,12 +17,12 @@ RUN set -x \
   && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
 RUN \
-  --mount=type=cache,target=/var/cache/apt \
-  --mount=type=cache,target=/var/lib/apt \
-  --mount=type=cache,target=/root/.dotnet \
-  --mount=type=cache,target=/root/.local \
-  --mount=type=cache,target=/root/.npm \
-  --mount=type=cache,target=/root/.nuget \
+  #--mount=type=cache,target=/var/cache/apt \
+  #--mount=type=cache,target=/var/lib/apt \
+  #--mount=type=cache,target=/root/.dotnet \
+  #--mount=type=cache,target=/root/.local \
+  #--mount=type=cache,target=/root/.npm \
+  #--mount=type=cache,target=/root/.nuget \
   set -x \
   && apt-get update && apt-get install --no-install-recommends -yqq \
     git \
