@@ -1,67 +1,71 @@
-# syntax = docker/dockerfile:experimental
-FROM mcr.microsoft.com/dotnet/sdk:5.0.203-buster-slim
+FROM mcr.microsoft.com/dotnet/sdk:6.0.100-alpine3.14
 LABEL maintainer="Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)"
-LABEL description=".Net Core development image 5.0.203"
+LABEL description=".Net Core development image 6.0.100"
 
 ARG DOWNLOADS=/root/downloads
+ARG DIRS= \
+  /home/sprout/.config \
+  /home/sprout/.dotnet \
+  /home/sprout/.local \  
+  /home/sprout/.npm \
+  /home/sprout/.nuget
 
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_URLS=http://+:5000
+ENV DOTNET_ENVIRONMENT=Development
+ENV DOTNET_NOLOGO=1
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
-ENV NODE_HOME /opt/node-v14.17.0-linux-x64
-ENV PATH ${NODE_HOME}/bin:/home/sprout/.dotnet/tools:$PATH
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+ENV NODE_HOME=/opt/node-v16.13.1-linux-x64-musl
+ENV PATH=$PATH:/home/sprout/.dotnet/tools:$NODE_HOME/bin
 
 COPY ./bash_aliases /home/sprout/.bashrc
 COPY ./vimrc /home/sprout/.vimrc
 
-RUN set -x \
-  && rm -f /etc/apt/apt.conf.d/docker-clean \
-  && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
-
 RUN \
-  --mount=type=cache,target=/var/cache/apt \
-  --mount=type=cache,target=/var/lib/apt \
-  --mount=type=cache,target=/root/.dotnet \
-  --mount=type=cache,target=/root/.local \
-  --mount=type=cache,target=/root/.npm \
-  --mount=type=cache,target=/root/.nuget \
   set -x \
-  && apt-get update && apt-get install --no-install-recommends -yqq \
+  && apk add --no-cache \
     git \
     make \
-    vim \
-    xz-utils \
-  && ln -sf /usr/bin/vim /usr/bin/vi \
+    bash \
   && mkdir -p $DOWNLOADS \
-  && curl -L -o $DOWNLOADS/task_v3.4.2_linux_amd64.deb https://github.com/go-task/task/releases/download/v3.4.2/task_linux_amd64.deb \
-  && dpkg -i $DOWNLOADS/task_v3.4.2_linux_amd64.deb && apt install -f \
-  && curl -L -o $DOWNLOADS/dockerize-linux-amd64-v0.6.1.tar.gz https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz \
+  # dockerize
+  && curl -L -o $DOWNLOADS/dockerize-linux-amd64-v0.6.1.tar.gz https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-alpine-linux-amd64-v0.6.1.tar.gz \
   && tar -xf $DOWNLOADS/dockerize-linux-amd64-v0.6.1.tar.gz -C /usr/local/bin \
-  && curl -L -o $DOWNLOADS/node-v14.17.0-linux-x64.tar.xz https://nodejs.org/dist/v14.17.0/node-v14.17.0-linux-x64.tar.xz \
-  && tar -xf $DOWNLOADS/node-v14.17.0-linux-x64.tar.xz -C /opt \
+  # task
+  && curl -L -o $DOWNLOADS/task_v3.9.2_linux_amd64.tar.gz https://github.com/go-task/task/releases/download/v3.9.2/task_linux_amd64.tar.gz \
+  && tar -C /usr/local/bin -xzvf $DOWNLOADS/task_v3.9.2_linux_amd64.tar.gz \  
+  # node
+  && curl -L -o $DOWNLOADS/node-v16.13.1-linux-x64-musl.tar.xz https://unofficial-builds.nodejs.org/download/release/v16.13.1/node-v16.13.1-linux-x64-musl.tar.xz \
+  && tar -C /opt -xf $DOWNLOADS/node-v16.13.1-linux-x64-musl.tar.xz \  
+  # glic
+  && curl -L -o /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+  && curl -L -o $DOWNLOADS/glibc-2.34-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk \
+  && apk add $DOWNLOADS/glibc-2.34-r0.apk \  
+  # cleanup manual installs
   && rm -fr $DOWNLOADS \
+  # install npm tools
   && npm config set user 0 \
-  && npm install -g yarn serverless \
-  && dotnet tool update -g dotnet-ef \
-  && dotnet tool update -g Amazon.Lambda.Tools --framework netcoreapp3.1 \
-  && useradd -ms /bin/bash sprout \
-  && cp -R /root/.config /home/sprout/.config \
+  && npm install -g yarn serverless nodemon \
+  # install dotnet tools
+  && dotnet tool install --global dotnet-ef --version 6.0.0 \
+  && dotnet tool install --global Amazon.Lambda.Tools --version 5.2.0 \
+  # create non-root user, directories and update permissions
+  && adduser -s /bin/bash -D sprout \
   && cp -R /root/.dotnet /home/sprout/.dotnet \
   && cp -R /root/.local /home/sprout/.local \
-  && cp -R /root/.npm /home/sprout/.npm \
   && cp -R /root/.nuget /home/sprout/.nuget \
   && mkdir -p \
+    $DIRS \
     /work/app/src \
     /work/data \
   && chown -R sprout:sprout \
     /home/sprout \
     /home/sprout/.bashrc \
     /home/sprout/.vimrc \
-    /home/sprout/.config \
-    /home/sprout/.dotnet \
-    /home/sprout/.local \
-    /home/sprout/.nuget \
-    /home/sprout/.npm \
+    $DIRS \
     /work
 
-WORKDIR /work/app/src
+WORKDIR /work/app
 EXPOSE 5000
 USER sprout

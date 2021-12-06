@@ -1,12 +1,12 @@
 # docker-dotnet-dev
 
-.Net development image 5.0.203
+.Net development image 6.0.100
 
 ## Versions
-- .Net SDK 5.0.203: https://hub.docker.com/_/microsoft-dotnet-sdk//
+- .Net SDK 6.0.100: https://hub.docker.com/_/microsoft-dotnet-sdk//
 - Dockerize v0.6.1: https://github.com/jwilder/dockerize
-- Node.js v14.17.0: https://nodejs.org/en/
-- Task v3.4.2: https://github.com/go-task
+- Node.js v16.13.1: https://nodejs.org/en/
+- Task v3.9.2: https://github.com/go-task
 - Entity Framework Cli (dotnet-ef): https://docs.microsoft.com/en-us/ef/core/cli/dotnet
 - Serverless: https://www.serverless.com 
 
@@ -16,7 +16,7 @@ Basic usage:
 ```
 docker run --rm \
   -v `pwd`/src:/work/app/src \
-  chrisgarrett/dotnet-dev:5.0.203 \
+  chrisgarrett/dotnet-dev:6.0.100 \
   dotnet create reactredux
 ```
 
@@ -28,7 +28,7 @@ docker run --rm \
   -v `pwd`/../cache/nuget:/home/sprout/.nuget \
   -v `pwd`/../cache/configdotnet:/home/sprout/.config \
   -v `pwd`/../cache/npm:/home/sprout/.npm \
-  chrisgarrett/dotnet-dev:5.0.203 \
+  chrisgarrett/dotnet-dev:6.0.100 \
   dotnet create reactredux
 ```
 
