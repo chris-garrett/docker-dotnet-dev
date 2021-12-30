@@ -1,5 +1,5 @@
 
-export IMAGE_VERSION=6.0.100
+export IMAGE_VERSION=5.0.404
 export IMAGE_NAME=chrisgarrett/dotnet-dev
 export DOTNET_VERSION=${IMAGE_VERSION}
 export DOCKERIZE_VERSION=v0.6.1
