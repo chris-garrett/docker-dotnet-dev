@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0.100-alpine3.14
+FROM mcr.microsoft.com/dotnet/sdk:6.0.400-alpine3.16
 LABEL maintainer="Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)"
-LABEL description=".Net Core development image 6.0.100"
+LABEL description=".Net Core development image 6.0.400"
 
 ARG DOWNLOADS=/root/downloads
 ARG DIRS= \
@@ -16,7 +16,7 @@ ENV DOTNET_ENVIRONMENT=Development
 ENV DOTNET_NOLOGO=1
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-ENV NODE_HOME=/opt/node-v16.13.1-linux-x64-musl
+ENV NODE_HOME=/opt/node-v16.17.0-linux-x64-musl
 ENV PATH=$PATH:/home/sprout/.dotnet/tools:$NODE_HOME/bin
 
 COPY ./bash_aliases /home/sprout/.bashrc
@@ -36,12 +36,12 @@ RUN \
   && curl -L -o $DOWNLOADS/task_v3.9.2_linux_amd64.tar.gz https://github.com/go-task/task/releases/download/v3.9.2/task_linux_amd64.tar.gz \
   && tar -C /usr/local/bin -xzvf $DOWNLOADS/task_v3.9.2_linux_amd64.tar.gz \  
   # node
-  && curl -L -o $DOWNLOADS/node-v16.13.1-linux-x64-musl.tar.xz https://unofficial-builds.nodejs.org/download/release/v16.13.1/node-v16.13.1-linux-x64-musl.tar.xz \
-  && tar -C /opt -xf $DOWNLOADS/node-v16.13.1-linux-x64-musl.tar.xz \  
+  && curl -L -o $DOWNLOADS/node-v16.17.0-linux-x64-musl.tar.xz https://unofficial-builds.nodejs.org/download/release/v16.17.0/node-v16.17.0-linux-x64-musl.tar.xz \
+  && tar -C /opt -xf $DOWNLOADS/node-v16.17.0-linux-x64-musl.tar.xz \  
   # glic
   && curl -L -o /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-  && curl -L -o $DOWNLOADS/glibc-2.34-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk \
-  && apk add $DOWNLOADS/glibc-2.34-r0.apk \  
+  && curl -L -o $DOWNLOADS/glibc-2.35-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk \
+  && apk add $DOWNLOADS/glibc-2.35-r0.apk \  
   # cleanup manual installs
   && rm -fr $DOWNLOADS \
   # install npm tools
