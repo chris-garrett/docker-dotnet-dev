@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0.403-alpine3.16
+FROM mcr.microsoft.com/dotnet/sdk:7.0.100-alpine3.16
 LABEL maintainer="Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)"
-LABEL description=".Net Core development image 6.0.403"
+LABEL description=".Net Core development image 7.0.100"
 
 ARG DOWNLOADS=/root/downloads
 ARG DIRS= \
