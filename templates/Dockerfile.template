@@ -24,10 +24,15 @@ COPY ./vimrc /home/sprout/.vimrc
 
 RUN \
   set -x \
+  && apk update \
+  && apk upgrade -U \
   && apk add --no-cache \
     git \
     make \
     bash \
+    icu-libs \
+    icu-data-full \
+    tzdata \
   && mkdir -p $DOWNLOADS \
   # dockerize
   && curl -L -o $DOWNLOADS/dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -38,18 +43,21 @@ RUN \
   # node
   && curl -L -o $DOWNLOADS/node-${NODE_VERSION}-linux-x64-musl.tar.xz https://unofficial-builds.nodejs.org/download/release/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64-musl.tar.xz \
   && tar -C /opt -xf $DOWNLOADS/node-${NODE_VERSION}-linux-x64-musl.tar.xz \  
-  # glic
+  # glibc
   && curl -L -o /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
   && curl -L -o $DOWNLOADS/glibc-$GLIBC_VERSION.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-$GLIBC_VERSION.apk \
-  && apk add $DOWNLOADS/glibc-$GLIBC_VERSION.apk \  
+  # broken as of 3.16. work around is: https://github.com/sgerrand/alpine-pkg-glibc/issues/185#issuecomment-1261935191
+  && apk add --force-overwrite $DOWNLOADS/glibc-$GLIBC_VERSION.apk \
+  && apk fix --force-overwrite alpine-baselayout-data \
   # cleanup manual installs
   && rm -fr $DOWNLOADS \
   # install npm tools
   && npm config set user 0 \
   && npm install -g yarn serverless nodemon \
   # install dotnet tools
-  && dotnet tool install --global dotnet-ef --version 6.0.0 \
-  && dotnet tool install --global Amazon.Lambda.Tools --version 5.2.0 \
+  && dotnet tool install --global dotnet-ef --version 6.0.11 \
+  && dotnet tool install --global Amazon.Lambda.Tools --version 5.6.2 \
+  && dotnet tool install --global dotnet-depends --version 0.6.1 \
   # create non-root user, directories and update permissions
   && adduser -s /bin/bash -D sprout \
   && cp -R /root/.dotnet /home/sprout/.dotnet \
