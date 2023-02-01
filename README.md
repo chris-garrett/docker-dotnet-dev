@@ -1,9 +1,9 @@
 # docker-dotnet-dev
 
-.Net development image 7.0.100
+.Net development image 7.0.102
 
 ## Versions
-- .Net SDK 7.0.100: https://hub.docker.com/_/microsoft-dotnet-sdk//
+- .Net SDK 7.0.102: https://hub.docker.com/_/microsoft-dotnet-sdk//
 - Dockerize v0.6.1: https://github.com/jwilder/dockerize
 - Node.js v18.12.1: https://nodejs.org/en/
 - Task v3.19.0: https://github.com/go-task
@@ -16,7 +16,7 @@ Basic usage:
 ```
 docker run --rm \
   -v `pwd`/src:/work/app/src \
-  chrisgarrett/dotnet-dev:7.0.100 \
+  chrisgarrett/dotnet-dev:7.0.102 \
   dotnet create reactredux
 ```
 
@@ -28,7 +28,7 @@ docker run --rm \
   -v `pwd`/../cache/nuget:/home/sprout/.nuget \
   -v `pwd`/../cache/configdotnet:/home/sprout/.config \
   -v `pwd`/../cache/npm:/home/sprout/.npm \
-  chrisgarrett/dotnet-dev:7.0.100 \
+  chrisgarrett/dotnet-dev:7.0.102 \
   dotnet create reactredux
 ```
 
