@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0.100-alpine3.16
+FROM mcr.microsoft.com/dotnet/sdk:7.0.102-alpine3.16
 LABEL maintainer="Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)"
-LABEL description=".Net Core development image 7.0.100"
+LABEL description=".Net Core development image 7.0.102"
 
 ARG DOWNLOADS=/root/downloads
 ARG DIRS= \
@@ -49,15 +49,22 @@ RUN \
   # broken as of 3.16. work around is: https://github.com/sgerrand/alpine-pkg-glibc/issues/185#issuecomment-1261935191
   && apk add --force-overwrite $DOWNLOADS/glibc-2.35-r0.apk \
   && apk fix --force-overwrite alpine-baselayout-data \
+  # https://github.com/sgerrand/alpine-pkg-glibc/issues/181
+  && mkdir -p /lib64 \
+  && ln -sf /usr/glibc-compat/lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 \
   # cleanup manual installs
   && rm -fr $DOWNLOADS \
   # install npm tools
   && npm config set user 0 \
   && npm install -g yarn serverless nodemon \
   # install dotnet tools
-  && dotnet tool install --global dotnet-ef --version 6.0.11 \
-  && dotnet tool install --global Amazon.Lambda.Tools --version 5.6.2 \
+  && dotnet tool install --global dotnet-ef --version 7.0.2 \
+  && dotnet tool install --global Amazon.Lambda.Tools --version 5.6.3 \
   && dotnet tool install --global dotnet-depends --version 0.6.1 \
+  && dotnet tool install --global dotnet-counters --version 6.0.351802 \
+  && dotnet tool install --global dotnet-dump --version 6.0.351802 \
+  && dotnet tool install --global dotnet-symbol --version 1.0.406001 \
+  && dotnet tool install --global dotnet-trace --version 6.0.351802 \
   # create non-root user, directories and update permissions
   && adduser -s /bin/bash -D sprout \
   && cp -R /root/.dotnet /home/sprout/.dotnet \
