@@ -1,10 +1,10 @@
 
-export IMAGE_VERSION=7.0.102
+export IMAGE_VERSION=7.0.203
 export IMAGE_NAME=chrisgarrett/dotnet-dev
 export DOTNET_VERSION=${IMAGE_VERSION}
 export DOCKERIZE_VERSION=v0.6.1
-export TASK_VERSION=v3.19.0
-export NODE_VERSION=v18.12.1
+export TASK_VERSION=v3.24.0
+export NODE_VERSION=v18.16.0
 export GLIBC_VERSION=2.35-r0
 
 all: build
