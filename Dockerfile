@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0.203-alpine3.17
+FROM mcr.microsoft.com/dotnet/sdk:8.0.101-alpine3.19
 LABEL maintainer="Chris Garrett (https://github.com/chris-garrett/docker-dotnet-dev)"
-LABEL description=".Net Core development image 7.0.203"
+LABEL description=".Net Core development image 8.0.101"
 
 ARG DOWNLOADS=/root/downloads
 ARG DIRS= \
@@ -17,7 +17,8 @@ ENV DOTNET_ENVIRONMENT=Development
 ENV DOTNET_NOLOGO=1
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-ENV NODE_HOME=/opt/node-v18.16.0-linux-x64-musl
+ENV NODE_HOME=/opt/node-v20.11.0-linux-x64-musl
+ENV PYTHONUNBUFFERED=1
 ENV PATH=$PATH:/home/sprout/.dotnet/tools:$NODE_HOME/bin
 
 COPY ./bash_aliases /home/sprout/.bashrc
@@ -28,27 +29,35 @@ RUN \
   && apk update \
   && apk upgrade -U \
   && apk add --no-cache \
-    git \
-    make \
-    bash \
-    icu-libs \
-    icu-data-full \
-    tzdata \
+  git \
+  make \
+  bash \
+  icu-libs \
+  icu-data-full \
+  tzdata \
+  xz \
+  python3 \
+  py3-pip \
+  py3-setuptools \
   && mkdir -p $DOWNLOADS /tools \
   # dockerize
-  && curl -L -o $DOWNLOADS/dockerize-linux-amd64-v0.6.1.tar.gz https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-alpine-linux-amd64-v0.6.1.tar.gz \
-  && tar -xf $DOWNLOADS/dockerize-linux-amd64-v0.6.1.tar.gz -C /usr/local/bin \
-  # task
-  && curl -L -o $DOWNLOADS/task_v3.24.0_linux_amd64.tar.gz https://github.com/go-task/task/releases/download/v3.24.0/task_linux_amd64.tar.gz \
-  && tar -C /usr/local/bin -xzvf $DOWNLOADS/task_v3.24.0_linux_amd64.tar.gz \  
+  && curl -L -o $DOWNLOADS/dockerize-linux-amd64-v0.7.0.tar.gz https://github.com/jwilder/dockerize/releases/download/v0.7.0/dockerize-alpine-linux-amd64-v0.7.0.tar.gz \
+  && tar -xf $DOWNLOADS/dockerize-linux-amd64-v0.7.0.tar.gz -C /usr/local/bin \
+  # watchexec
+  && curl -L -o $DOWNLOADS/watchexec_1.25.1.tar.xz https://github.com/watchexec/watchexec/releases/download/v1.25.1/watchexec-1.25.1-x86_64-unknown-linux-musl.tar.xz \
+  && tar \
+  -xf $DOWNLOADS/watchexec_1.25.1.tar.xz \
+  --strip-components=1 \
+  -C /usr/local/bin \
+  watchexec-1.25.1-x86_64-unknown-linux-musl/watchexec \
   # node
-  && curl -L -o $DOWNLOADS/node-v18.16.0-linux-x64-musl.tar.xz https://unofficial-builds.nodejs.org/download/release/v18.16.0/node-v18.16.0-linux-x64-musl.tar.xz \
-  && tar -C /opt -xf $DOWNLOADS/node-v18.16.0-linux-x64-musl.tar.xz \  
+  && curl -L -o $DOWNLOADS/node-v20.11.0-linux-x64-musl.tar.xz https://unofficial-builds.nodejs.org/download/release/v20.11.0/node-v20.11.0-linux-x64-musl.tar.xz \
+  && tar -C /opt -xf $DOWNLOADS/node-v20.11.0-linux-x64-musl.tar.xz \  
   # glibc
   && curl -L -o /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-  && curl -L -o $DOWNLOADS/glibc-2.35-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk \
+  && curl -L -o $DOWNLOADS/glibc-2.35-r1.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk \
   # broken as of 3.16. work around is: https://github.com/sgerrand/alpine-pkg-glibc/issues/185#issuecomment-1261935191
-  && apk add --force-overwrite $DOWNLOADS/glibc-2.35-r0.apk \
+  && apk add --force-overwrite $DOWNLOADS/glibc-2.35-r1.apk \
   && apk fix --force-overwrite alpine-baselayout-data \
   # https://github.com/sgerrand/alpine-pkg-glibc/issues/181
   && mkdir -p /lib64 \
@@ -56,21 +65,20 @@ RUN \
   # cleanup manual installs
   && rm -fr $DOWNLOADS \
   # install npm tools
-  && npm install -g yarn serverless nodemon \
+  && npm install -g yarn \
   # install dotnet tools
   && dotnet tool install --tool-path=/tools dotnet-depends --version 0.7.0 \
-  && dotnet tool install --tool-path=/tools dotnet-counters --version 7.0.421201 \
-  && dotnet tool install --tool-path=/tools dotnet-dump --version 7.0.421201 \
+  && dotnet tool install --tool-path=/tools dotnet-counters --version 8.0.510501 \
+  && dotnet tool install --tool-path=/tools dotnet-dump --version 8.0.510501 \
   && dotnet tool install --tool-path=/tools dotnet-symbol --version 1.0.415602 \
-  && dotnet tool install --tool-path=/tools dotnet-trace --version 7.0.421201 \
-  && dotnet tool install --tool-path=/tools dotnet-ef --version 7.0.5 \
-  && dotnet tool install --tool-path=/tools Amazon.Lambda.Tools --version 5.6.6 \
+  && dotnet tool install --tool-path=/tools dotnet-trace --version 8.0.510501 \
+  && dotnet tool install --tool-path=/tools dotnet-ef --version 8.0.1 \
   # install jetbrains tools
   && mkdir -p /tools/dotmemory /tools/dottrace \
-  && curl -L -o /tmp/dotmemory.tgz https://download.jetbrains.com/resharper/dotUltimate.2023.1.1/JetBrains.dotMemory.Console.linux-musl-x64.2023.1.1.tar.gz \
+  && curl -L -o /tmp/dotmemory.tgz https://download.jetbrains.com/resharper/dotUltimate.2023.3.3/JetBrains.dotMemory.linux-x64.2023.3.3.tar.gz \
   && tar -C /tools/dotmemory -xf /tmp/dotmemory.tgz \
   && rm -fr /tmp/dotmemory.tgz \
-  && curl -L -o /tmp/dottrace.tgz https://download.jetbrains.com/resharper/dotUltimate.2023.1.1/JetBrains.dotTrace.CommandLineTools.linux-musl-x64.2023.1.1.tar.gz \
+  && curl -L -o /tmp/dottrace.tgz https://download.jetbrains.com/resharper/dotUltimate.2023.3.3/JetBrains.dotTrace.CommandLineTools.linux-x64.2023.3.3.tar.gz \
   && tar -C /tools/dottrace -xf /tmp/dottrace.tgz \
   && rm -fr /tmp/dottrace.tgz \
   # create non-root user, directories and update permissions
@@ -78,16 +86,17 @@ RUN \
   && cp -R /root/.dotnet /home/sprout/.dotnet \
   && cp -R /root/.local /home/sprout/.local \
   && cp -R /root/.nuget /home/sprout/.nuget \
+  && cp -R /root/.npm /home/sprout/.npm \
   && mkdir -p \
-    $DIRS \
-    /work/app/src \
-    /work/data \
+  $DIRS \
+  /work/app/src \
+  /work/data \
   && chown -R sprout:sprout \
-    /home/sprout \
-    /home/sprout/.bashrc \
-    /home/sprout/.vimrc \
-    $DIRS \
-    /work \
+  /home/sprout \
+  /home/sprout/.bashrc \
+  /home/sprout/.vimrc \
+  $DIRS \
+  /work \
   # should be the last thing
   && rm -rf /var/lib/apt/lists/*
 
